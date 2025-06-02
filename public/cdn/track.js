@@ -134,11 +134,13 @@
    });
 
    async function sendAnalytics() {
+      const vid = getVisitorId()
+      const sid = getSessionId()
       const visitorIp = await getClientIP(getGeo);
       const clientGeoInfo = await getClientGeoInfo(getGeo);
       const data = {
-         visitorId: getVisitorId(),
-         sessionId: getSessionId(),
+         visitorId: vid,
+         sessionId: sid,
          timestamp: Date.now(),
          device: {
             type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
