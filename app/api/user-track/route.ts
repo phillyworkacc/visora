@@ -24,9 +24,6 @@ export async function POST(req: NextRequest) {
    const body: RawVisitorUserTracker = await req.json();
 
    if (authHeader === authorizer) {
-      // quick log of the body received from the api request
-      console.log('Visora Web Tracker', body);
-
       // check if visitor exists and if not create a visitor
       const visitor: VisitorData | null = await VisitorsDataDb.findOne({
          visitorId: body.visitorId,
