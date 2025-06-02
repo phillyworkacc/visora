@@ -122,7 +122,7 @@
          }
       };
 
-      await fetch('http://localhost:3000/api/user-track', {
+      await fetch('https://visora.vercel.app/api/user-track', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json', Authorization: "N+w9Wk=31" },
          body: JSON.stringify({
@@ -167,7 +167,7 @@
          live: true
       };
       
-      await fetch('http://localhost:3000/api/user-track', {
+      await fetch('https://visora.vercel.app/api/user-track', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json', Authorization: "N+w9Wk=31" },
          body: JSON.stringify({
