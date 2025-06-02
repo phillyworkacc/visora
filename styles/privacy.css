@@ -1,0 +1,13 @@
+.privacy {
+   width: 100vw;
+   height: fit-content;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.privacy .privacy-box {
+   width: 100%;
+   max-width: 900px;
+   height: fit-content;
+}

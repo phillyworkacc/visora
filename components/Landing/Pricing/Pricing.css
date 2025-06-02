@@ -1,0 +1,129 @@
+.pricing-section {
+  max-width: 900px;
+  margin: 4rem auto;
+  padding: 0 1rem;
+  text-align: center;
+  color: #333;
+}
+
+.pricing-section h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #6A0DAD;
+}
+
+.pricing-cards {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pricing-card {
+   background: #f8f4ff;
+   border-radius: 12px;
+   padding: 2rem;
+   width: 350px;
+   box-shadow: 0 4px 12px rgba(106, 13, 173, 0.15);
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   color: #4a007a;
+   transition: transform 0.2s ease;
+}
+
+.pricing-card h3 {
+   font-size: 1.5rem;
+   margin-bottom: 0.5rem;
+}
+
+.pricing-card h3 span {
+   font-size: 0.8rem;
+   color: #a07ee7;
+   font-weight: 600;
+   margin-left: 0.4rem;
+}
+
+.price {
+   font-size: 2.5rem;
+   font-weight: 700;
+   margin: 1rem 0;
+   color: #6A0DAD;
+}
+
+.price span {
+   font-size: 1rem;
+   font-weight: 400;
+   color: #8040c2;
+}
+
+.pricing-card ul {
+   list-style: none;
+   padding: 0;
+   margin: 1rem 0 2rem 0;
+   text-align: left;
+   width: 100%;
+}
+
+.pricing-card ul li {
+   margin-bottom: 0.75rem;
+   padding-left: 1.2rem;
+   position: relative;
+   font-weight: 500;
+}
+
+.pricing-card ul li::before {
+   content: "✓";
+   position: absolute;
+   left: 0;
+   color: #6A0DAD;
+   font-weight: 700;
+}
+
+.btn-primary,
+.btn-secondary {
+   padding: 0.7rem 1.5rem;
+   border: none;
+   border-radius: 30px;
+   font-weight: 600;
+   cursor: pointer;
+   width: 100%;
+   font-size: 1rem;
+}
+
+.btn-primary {
+   background-color: #6A0DAD;
+   color: #fff;
+}
+
+.btn-primary:hover {
+   background-color: #570b8a;
+}
+
+.btn-secondary {
+   background-color: #c9b9e6;
+   color: #6A0DAD;
+   cursor: not-allowed;
+}
+
+.note {
+   font-size: 0.85rem;
+   color: #8040c2;
+   margin-top: 1rem;
+}
+
+.coming-soon {
+   opacity: 0.7;
+   pointer-events: none;
+}
+
+@media (max-width: 600px) {
+   .pricing-cards {
+      flex-direction: column;
+      align-items: center;
+   }
+
+   .pricing-card {
+      width: 90%;
+   }
+}

@@ -1,0 +1,51 @@
+.custom-player {
+   position: relative;
+   width: 100%;
+   height: fit-content;
+   max-width: 1000px;
+   margin: 2rem auto;
+   background: #b8b8b8;
+   border-radius: 1rem;
+   overflow: hidden;
+   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.custom-player video {
+   width: 100%;
+   display: block;
+}
+
+.controls {
+   width: 100%;
+   display: flex;
+   align-items: center;
+   gap: 0.5rem;
+   padding: 1rem 20px;
+   color: white;
+   background: rgba(49, 49, 49, 0.8);
+   font-size: 1rem;
+}
+
+.controls button {
+   background: #6A0DAD;
+   border: none;
+   color: white;
+   padding: 0.4rem 0.8rem;
+   border-radius: 0.375rem;
+   cursor: pointer;
+   font-weight: bold;
+   transition: background 0.2s;
+}
+
+.controls button:hover {
+   background: #5c0bb0;
+}
+
+.controls input[type="range"] {
+   flex-grow: 1;
+   accent-color: #6A0DAD;
+   height: 4px;
+   background: #333;
+   border-radius: 2px;
+   cursor: pointer;
+}

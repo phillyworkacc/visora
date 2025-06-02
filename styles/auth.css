@@ -1,0 +1,91 @@
+.auth {
+   min-height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background: linear-gradient(135deg, #6a0dad 0%, #9b51e0 100%);
+   color: #fff;
+   padding: 1rem;
+}
+
+.auth .auth-box {
+   width: 100%;
+   max-width: 450px;
+   background: #fff;
+   color: #4a007a;
+   padding: 2.5rem 2rem 3rem;
+   border-radius: 12px;
+   box-shadow: 0 10px 30px rgba(106, 13, 173, 0.3);
+   text-align: center;
+}
+
+.auth .auth-box .actions {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 10px;
+}
+
+.auth .auth-box .actions button {
+   background-color: #6600af;
+   border: none;
+   padding: 0.8rem;
+   border-radius: 30px;
+   color: white;
+}
+
+.auth .auth-box .actions.sm button {
+   padding: 0.5rem;
+   border-radius: 10px;
+}
+
+.auth .auth-box .actions.sm button.outline-black {
+   padding: 0.5rem;
+   border-radius: 10px;
+   background-color: #ffffff;
+   color: black;
+   border: 1px solid #c5c5c5;
+}
+
+.auth .auth-box .form {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 20px;
+}
+
+.auth .auth-box .form .form-content {
+   width: 100%;
+}
+
+.auth .auth-box .form input, textarea {
+   width: 100%;
+   padding: 0.75rem 1rem;
+   font-size: 1rem;
+   border: 2px solid #d3c1f2;
+   border-radius: 8px;
+   outline-offset: 2px;
+   transition: border-color 0.2s ease;
+}
+
+.auth .auth-box .form textarea {
+   height: 15vh;
+   resize: none;
+   outline: none;
+}
+
+.auth .auth-box .form input:focus, textarea:focus {
+   border-color: #6a0dad;
+   outline: none;
+}
+
+@media screen and (max-width: 900px) {
+   .auth .auth-box {
+      width: 100%;
+      max-width: 600px;
+      border: none;
+      box-shadow: none;
+   }
+}
