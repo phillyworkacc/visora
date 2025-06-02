@@ -5,6 +5,7 @@ import WebsiteAnalytics from "./Website";
 import WebsitesDb from "@/db/websites";
 import UsersDb from "@/db/user";
 import { getVisitorDataForWebsite } from "@/app/actions/Website";
+import { connectToDatabase } from "@/db/db";
 
 type WebsitePageProps = {
    params: Promise<{
@@ -25,6 +26,7 @@ export async function generateMetadata({ params }: WebsitePageProps) {
 }
 
 export default async function WebsiteDashboardPage ({ params }: WebsitePageProps) {
+   await connectToDatabase();
    const session = await getServerSession(authOptions);
    const { websiteId } = await params;
 

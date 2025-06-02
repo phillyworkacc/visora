@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import AddWebsite from "./AddWebsite";
 import UsersDb from "@/db/user";
 import ThresholdWebsites from "./ThresholdWebsites";
+import { connectToDatabase } from "@/db/db";
 
 export async function generateMetadata() {
    const session = await getServerSession(authOptions);
@@ -13,6 +14,7 @@ export async function generateMetadata() {
 }
 
 export default async function AddWebsitePage () {
+   await connectToDatabase();
    const session = await getServerSession(authOptions);
    if (session?.user) {
       const user: User | null = await UsersDb.findOne({ email: session.user.email });
