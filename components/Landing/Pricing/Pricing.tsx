@@ -8,7 +8,7 @@ export default function PricingTable () {
 
    const startBasicPlan = () => {
       if (session?.user) {
-         const stripeVisoraBasicPlanLink = 'https://buy.stripe.com/test_4gM4gy72nc7m5rw8wS7AI00'
+         const stripeVisoraBasicPlanLink = 'https://buy.stripe.com/4gM4gy72nc7m5rw8wS7AI00'
          return `${stripeVisoraBasicPlanLink}?prefilled_email=${session.user.email}`;
       } else {
          return '/login'
