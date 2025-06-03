@@ -161,14 +161,6 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
 
             <div className="horizontal-convertible gap-10">
                <Card padding="0 15px">
-                  <div className="text-xs bold-600 pd-1">Live Visitors</div>
-                  <div className="text-xxl bold-800">{liveVisitors}</div>
-                  <div 
-                     className="text-xxs grey-5 dfb align-center gap-5 pd-2 visible-link fit"
-                     onClick={liveVisitorHelp}
-                  ><Info size={18} /> Learn More</div>
-               </Card>
-               <Card padding="0 15px">
                   <div className="text-xs bold-600 pd-1">Visitors (last 30 days)</div>
                   <div className="text-xxl bold-800">{visitorsInPast30Days}</div>
                   {decideGrowthUI(growthInPast30Days)}
