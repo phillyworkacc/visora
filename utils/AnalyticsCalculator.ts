@@ -14,6 +14,10 @@ export const WebsiteAnalyticsCalculator = {
       return liveVisitors.length;
    },
 
+   allTimeVisitors: (visitorsData: VisitorData[]) => {
+      return visitorsData.length;
+   },
+
    visitorsInPast30Days: (visitorsData: VisitorData[]) => {
       const currentTime = Date.now();
       const time30DaysAgo = currentTime - (30 * 24 * 60 * 60 * 1000);

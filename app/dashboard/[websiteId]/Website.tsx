@@ -33,6 +33,7 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
    const bounceRate = WebsiteAnalyticsCalculator.bounceRate(websiteVisitorsData);
    const averageSessionDuration = WebsiteAnalyticsCalculator.averageSessionDuration(websiteVisitorsData);
    const visitorsInPast30Days = WebsiteAnalyticsCalculator.visitorsInPast30Days(websiteVisitorsData);
+   const allTimeVisitors = WebsiteAnalyticsCalculator.allTimeVisitors(websiteVisitorsData);
    const growthInPast30Days = WebsiteAnalyticsCalculator.growthInVisitorsInPast30Days(websiteVisitorsData);
 
    const deviceComparison = WebsiteAnalyticsCalculator.deviceComparison(websiteVisitorsData);
@@ -164,6 +165,10 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
                   <div className="text-xs bold-600 pd-1">Visitors (last 30 days)</div>
                   <div className="text-xxl bold-800">{visitorsInPast30Days}</div>
                   {decideGrowthUI(growthInPast30Days)}
+               </Card>
+               <Card padding="0 15px">
+                  <div className="text-xs bold-600 pd-1">All Time</div>
+                  <div className="text-xxl bold-800">{visitorsInPast30Days}</div>
                </Card>
                <Card padding="0 15px">
                   <div className="text-xs bold-600 pd-1">Average Session Duration</div>
