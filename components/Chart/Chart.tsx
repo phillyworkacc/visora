@@ -16,7 +16,7 @@ export default function Chart({ data, yDataKey, xDataKey }: ChartProps) {
    useEffect(() => {
       if (getDeviceType(navigator) == "mobile") {
          setHeight(200)
-         setWidth(340)
+         setWidth(300)
       } else {
          setHeight(250)
          setWidth(500)
