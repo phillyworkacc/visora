@@ -1,6 +1,7 @@
 "use client"
 import { appUrl } from "@/utils/constants";
 import "./Icon.css"
+import Image from "next/image";
 
 type IconProps = {
    size: number;
@@ -17,7 +18,7 @@ export function VisoraLogo({ size }: IconProps) {
       <div className='icon' style={{
          width: `${size}px`, height: `${size}px`
       }}>
-         <img src={appUrl + "/assets/logo/white-background-logo.png"} alt="logo" />
+         <Image src={appUrl + "/assets/logo/white-background-logo.png"} alt="logo" width={size} height={size} />
       </div>
    )
 }
@@ -92,12 +93,25 @@ export function MobileIcon({ size }: IconProps) {
 
 export function CustomIcon({ size, url, round }: CustomIconProps) {
    return <div className={`icon ${round ? 'round' : ''}`} style={{ width: `${size}px`, height: `${size}px` }}>
-      <img src={url} alt="icon" />
+      <img src={url} alt="icon" width={size} height={size} />
+   </div>
+}
+
+export function CustomAvatarIcon({ size, url, round }: CustomIconProps) {
+   return <div className={`icon ${round ? 'round' : ''}`} style={{ width: `${size}px`, height: `${size}px` }}>
+      <Image src={url} alt="icon" width={size} height={size} />
    </div>
 }
 
 export function CustomFlagIcon({ size, url }: CustomIconProps) {
    return <div className="icon" style={{ width: `${Math.round(size*1.333333)}px`, height: `${size}px` }}>
-      <img src={url} alt="icon" style={{ borderRadius: '4px' }} />
+      <Image 
+         src={url} 
+         alt="icon" 
+         style={{ borderRadius: '4px' }} 
+         width={size} 
+         height={size}
+         onError={(e: any) => (e.target.src = '/assets/unknown-flag.png')}
+      />
    </div>
 }

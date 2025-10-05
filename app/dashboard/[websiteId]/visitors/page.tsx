@@ -1,11 +1,11 @@
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import WebsiteAnalytics from "./Website";
-import WebsitesDb from "@/db/websites";
-import UsersDb from "@/db/user";
 import { getVisitorDataForWebsite } from "@/app/actions/Website";
 import { connectToDatabase } from "@/db/db";
+import WebsitesDb from "@/db/websites";
+import UsersDb from "@/db/user";
+import Visitors from "./Visitors";
 
 type WebsitePageProps = {
    params: Promise<{
@@ -41,9 +41,9 @@ export default async function WebsiteDashboardPage ({ params }: WebsitePageProps
          return <>That website doesn't exist</>
       } else {
          const websiteVisitorsData = await getVisitorDataForWebsite(websiteInfo.websiteId);
-         return <WebsiteAnalytics 
+         return <Visitors 
             websiteInfo={JSON.parse(JSON.stringify(websiteInfo))}
-            websiteVisitorsData={JSON.parse(JSON.stringify(websiteVisitorsData || []))}
+            websiteVisitors={JSON.parse(JSON.stringify(websiteVisitorsData))}
          />
       }
    } else {

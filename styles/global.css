@@ -169,9 +169,9 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 7px 14px;
+  padding: 10px 15px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
   font-family: "DM Sans";
 }
@@ -195,6 +195,10 @@ button.outline-black {
   background-color: #ffffff;
   color: black;
   border: 1px solid #efefef;
+}
+button.outline-black:hover {
+  border: 1px solid #dbdbdb; 
+  box-shadow: 0 2px 5px rgba(187, 187, 187, 0.24);
 }
 button.delete {
   background-color: #e42d2d;
@@ -242,3 +246,36 @@ input.l { font-size: 1.8rem; }
 input.xl { font-size: 2rem; }
 input.xxl { font-size: 2.15rem; }
 input.xxxl { font-size: 2.15rem; }
+
+/** rechart styles  */
+.recharts-tooltip-wrapper > .recharts-default-tooltip {
+   border-radius: 10px !important;
+   padding: 5px 10px !important;
+   display: flex;
+   align-items: center;
+   gap: 20px;
+   box-shadow: 0 2px 4px 4px rgba(209, 209, 209, 0.267);
+   border: 1px solid #e4e4e4 !important;
+}
+.home-page.dark .recharts-tooltip-wrapper > .recharts-default-tooltip {
+   background: var(--background) !important;
+   border: 1px solid #424242 !important;
+   box-shadow: 0 2px 4px 4px rgba(73, 73, 73, 0.267);
+}
+.recharts-tooltip-wrapper > .recharts-default-tooltip p { font-weight: 700 !important; }
+.recharts-tooltip-wrapper > .recharts-default-tooltip .recharts-tooltip-item-value {
+   color: var(--accent-color) !important;
+   font-weight: 600 !important;
+}
+
+.recharts-wrapper > svg > g.recharts-cartesian-grid > g > line {
+   stroke: #adadad69;
+}
+
+.recharts-wrapper > svg > g.recharts-layer.recharts-cartesian-axis.recharts-xAxis.xAxis > g > g > line { display: none !important; }
+.recharts-wrapper > svg > g.recharts-layer.recharts-cartesian-axis.recharts-xAxis.xAxis > g > g > line { display: none !important; }
+.recharts-wrapper > svg > g.recharts-layer.recharts-cartesian-axis.recharts-yAxis.yAxis > g > g > line { display: none !important; }
+.recharts-wrapper > svg > g.recharts-layer.recharts-cartesian-axis.recharts-yAxis.yAxis > line { display: none !important; }
+.recharts-wrapper > svg > g.recharts-layer.recharts-cartesian-axis.recharts-xAxis.xAxis > line { display: none !important; }
+.recharts-tooltip-wrapper > .recharts-default-tooltip .recharts-tooltip-item-name { display: none !important; }
+.recharts-tooltip-wrapper > .recharts-default-tooltip .recharts-tooltip-item-separator { display: none !important; }

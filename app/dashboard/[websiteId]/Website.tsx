@@ -4,18 +4,24 @@ import Card from "@/components/Card/Card";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
 import LoadingWebsiteAnalytics from "./LoadingWebsite";
 import Spacing from "@/components/Spacing/Spacing";
+import Link from "next/link";
+import Chart from "@/components/Chart/Chart";
+import Selections from "@/components/Selections/Selections";
+import VisitorUsers from "./VisitorUsers";
 import { AndroidIcon, CustomFlagIcon, CustomIcon, DesktopIcon, IOSIcon, LinuxIcon, MacOSIcon, MobileIcon, WindowsIcon } from "@/components/Icons/Icon";
 import { AiRecommendations } from "@/utils/AiRecommendations";
 import { getCountryFlag } from "@/utils/CountryFlagApi";
-import { ArrowDown, ArrowUp, CircleHelp, CircleUser, CodeXml, Copy, Info, LayoutDashboard, RefreshCcw, Sparkle, Trash2 } from "lucide-react";
+import { CircleHelp, CircleUser, CodeXml, Copy, Info, LayoutDashboard, Link2, RefreshCcw, Sparkle, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/components/Modal/ModalContext";
 import { toast } from "sonner";
-import { deleteUserWebsite, getVisitorDataForWebsite } from "@/app/actions/Website";
+import { deleteUserWebsite } from "@/app/actions/Website";
 import { useSession } from "next-auth/react";
 import { appUrl } from "@/utils/constants";
 import { formatTimeForAnalytics, WebsiteAnalyticsCalculator } from "@/utils/AnalyticsCalculator";
+import { chartCurrentMonth, chartGroupByMonth, chartLast7Days, getUniqueYears } from "@/utils/chartFunc";
+import { formatMilliseconds } from "@/utils/date";
 
 type WebsiteAnalyticsProps = {
    websiteInfo: Website;
@@ -28,16 +34,23 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
    const router = useRouter();
 
    const [visitorsData, setVisitorsData] = useState<VisitorData[] | null>(websiteVisitorsData || null);
+   const [chartXAxis, setChartXAxis] = useState('date');
 
    const liveVisitors = WebsiteAnalyticsCalculator.liveVisitors(websiteVisitorsData);
    const bounceRate = WebsiteAnalyticsCalculator.bounceRate(websiteVisitorsData);
    const averageSessionDuration = WebsiteAnalyticsCalculator.averageSessionDuration(websiteVisitorsData);
    const visitorsInPast30Days = WebsiteAnalyticsCalculator.visitorsInPast30Days(websiteVisitorsData);
-   const allTimeVisitors = WebsiteAnalyticsCalculator.allTimeVisitors(websiteVisitorsData);
-   const growthInPast30Days = WebsiteAnalyticsCalculator.growthInVisitorsInPast30Days(websiteVisitorsData);
 
    const deviceComparison = WebsiteAnalyticsCalculator.deviceComparison(websiteVisitorsData);
    const osComparison = WebsiteAnalyticsCalculator.osComparison(websiteVisitorsData);
+
+   const visitorsChartDataFormat = websiteVisitorsData.reduce((agg: any, visitor: any) => {
+      agg.push(
+         ...visitor.sessions.map((session: any) => ({ timestamp: session.timestamp, visitor: visitor?.location.ip }))
+      )
+      return agg;
+   }, []);
+   const [chartData, setChartData] = useState<any[]>(chartLast7Days(visitorsChartDataFormat))
 
    const deleteWebsiteButton = async () => {
       const response = await deleteUserWebsite(websiteInfo.websiteId);
@@ -50,19 +63,16 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
       close();
    }
 
-   const decideGrowthUI = (growth: number) => {
-      if (growth > 0) {
-         return <div className="text-xxs dfb align-center gap-5 pd-2 bold-700 success">
-            <ArrowUp size={18} strokeWidth={4} color="#14c100" /> {growth}% more than the last 30 days
-         </div>
-      } else if (growth < 0) {
-         return <div className="text-xxs dfb align-center gap-5 pd-2 bold-700 error">
-            <ArrowDown size={18} strokeWidth={4} color="#ff2d2d" /> {growth}% more than the last 30 days
-         </div>
+   const onSelectXAxis = (string: string) => {
+      if (string == "Last 7 days") {
+         setChartData(chartLast7Days(visitorsChartDataFormat));
+         setChartXAxis("date");
+      } else if (string == "Last 30 Days") {
+         setChartData(chartCurrentMonth(visitorsChartDataFormat));
+         setChartXAxis("day");
       } else {
-         return <div className="text-s pd-05">
-            <Spacing size={2} />
-         </div>;
+         setChartData(chartGroupByMonth(visitorsChartDataFormat, parseInt(string)));
+         setChartXAxis("month");
       }
    }
 
@@ -100,6 +110,12 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
       router.refresh();
    };
 
+   const getTotal = (data: any[]) => {
+      return data.reduce((agg, item) => {
+         return agg + item.totalVisitors;
+      }, 0)
+   }
+
    if (status == "loading" || visitorsData == null) {
       return <LoadingWebsiteAnalytics />;
    }
@@ -126,6 +142,12 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
                <button className="outline-black xxs" onClick={() => router.push("/dashboard")}>
                   <LayoutDashboard size={20} /> <span>Back to Dashboard</span>
                </button>
+
+               <Link href={`https://${websiteInfo.domain}`} target="_blank">
+                  <button className="outline-black xxs" style={{width:"100%"}}>
+                     <Link2 size={20} /> <span>Visit Website</span>
+                  </button>
+               </Link>
                
                <button className="outline-black xxs" onClick={handleReload}>
                   <RefreshCcw size={20} /> <span>Refresh Data</span>
@@ -159,29 +181,41 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
                   <CodeXml size={20} /> <span>Connect to Website</span>
                </button>
             </div>
-
-            <div className="horizontal-convertible gap-10">
-               <Card padding="0 15px">
-                  <div className="text-xs bold-600 pd-1">Visitors (last 30 days)</div>
-                  <div className="text-xxl bold-800">{visitorsInPast30Days}</div>
-                  {decideGrowthUI(growthInPast30Days)}
-               </Card>
-               <Card padding="0 15px">
-                  <div className="text-xs bold-600 pd-1">All Time</div>
-                  <div className="text-xxl bold-800">{visitorsInPast30Days}</div>
-               </Card>
-               <Card padding="0 15px">
-                  <div className="text-xs bold-600 pd-1">Average Session Duration</div>
-                  <div className="text-xxl bold-800">{formatTimeForAnalytics(averageSessionDuration)}</div>
-                  <div 
-                     className="text-xxs grey-5 dfb align-center gap-5 pd-2 visible-link fit"
-                     onClick={avgSessionDurationHelp}  
-                  ><Info size={18} /> Learn More</div>
-               </Card>
-            </div>
             
             <div className="horizontal-convertible gap-10">
-               <Card padding="0 15px">
+               <Card padding="10px 20px">
+                  <div className="text-xs bold-600 pd-1">Unique Visitors</div>
+                  <div className="text-xxl bold-800">{websiteVisitorsData.length}</div>
+                  <br />
+               </Card>
+               <Card padding="10px 20px">
+                  <div className="text-xs bold-600 pd-1">Returning Visitors</div>
+                  <div className="text-xxl bold-800">{websiteVisitorsData.filter(visitor => (visitor.sessions.length > 1)).length}</div>
+                  <br />
+               </Card>
+            </div>
+
+            <div className="horizontal-convertible gap-10">
+               <Card padding="10px 20px">
+                  <div className="text-xs bold-600 pd-1">Page Visitors Chart</div>
+                  <Selections
+                     selections={['Last 7 days', 'Last 30 Days', ...getUniqueYears(visitorsChartDataFormat)]}
+                     onSelect={onSelectXAxis}                     
+                  />
+                  <div className="text-xxl bold-800 pd-1">
+                     {getTotal(chartData)}<span style={{padding:"0 3px",fontSize:"0.9rem",color:"#686868ff",fontWeight:"normal"}}>page visit(s)</span>
+                  </div>
+                  <Chart
+                     data={chartData}
+                     xDataKey={chartXAxis}
+                     yDataKey="totalVisitors"
+                  />
+               </Card>
+               <VisitorUsers visitorsData={visitorsData.slice(0,4)} seeAllVisitorsAction={() => router.push(`/dashboard/${websiteInfo.websiteId}/visitors`)} />
+            </div>
+
+            <div className="horizontal-convertible gap-10">
+               <Card padding="10px 20px">
                   <div className="text-xs bold-600 pd-1">Bounce Rate</div>
                   <div className="text-xxl bold-800">{bounceRate}%</div>
                   <div 
@@ -189,7 +223,15 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
                      onClick={bounceRateHelp}
                   ><Info size={18} /> Learn More</div>
                </Card>
-               <Card padding="0 15px">
+               <Card padding="10px 20px">
+                  <div className="text-xs bold-600 pd-1">Average Session Duration</div>
+                  <div className="text-xxl bold-800">{formatTimeForAnalytics(averageSessionDuration)}</div>
+                  <div 
+                     className="text-xxs grey-5 dfb align-center gap-5 pd-2 visible-link fit"
+                     onClick={avgSessionDurationHelp}  
+                  ><Info size={18} /> Learn More</div>
+               </Card>
+               <Card padding="10px 20px">
                   <div className="text-xs bold-600 pd-1">Device</div>
                   <div className="list">
                      <ProgressBar size={parseFloat(deviceComparison.desktop)}><DesktopIcon size={18} /> Desktop</ProgressBar>
@@ -199,7 +241,7 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
             </div>
 
             <div className="horizontal-convertible gap-10">
-               <Card padding="0 15px">
+               <Card padding="10px 20px">
                   <div className="text-xs bold-600 pd-1">Device</div>
                   <div className="list">
                      <ProgressBar size={parseFloat(osComparison.windowsPercent)}><WindowsIcon size={18} /> Windows</ProgressBar>
@@ -213,12 +255,14 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
             </div>
 
             <div className="horizontal-convertible gap-10">
-               <Card padding="0 15px">
+               <Card padding="10px 20px">
                   <div className="text-s bold-600 pd-15">Country Statistics</div>
+                  <div className="text-xs">{WebsiteAnalyticsCalculator.countryStats(visitorsData).length} countries</div>
+                  <br />
                   <div className="list">
                      {WebsiteAnalyticsCalculator.countryStats(visitorsData).map((countryStat, index) => {
                         return <ProgressBar key={index} size={parseFloat(countryStat.percent)}>
-                           <CustomFlagIcon size={20} url={getCountryFlag(countryStat.flagCode.toLowerCase())} />
+                           <CustomFlagIcon size={20} url={getCountryFlag(countryStat.flagCode?.toLowerCase())} />
                            {countryStat.country}
                         </ProgressBar>
                      })}
@@ -228,7 +272,7 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
             </div>
 
             <div className="horizontal-convertible gap-10">
-               <Card padding="0 15px">
+               <Card padding="10px 20px">
                   <div className="text-s bold-600 pd-15">Page Views</div>
                   <div className="list">
                      {WebsiteAnalyticsCalculator.pageStats(visitorsData).map((pageStat, index) => {
@@ -242,7 +286,7 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
             </div>
             
             <div className="horizontal-convertible gap-10">
-               <Card padding="0 15px">
+               <Card padding="10px 20px">
                   <div className="text-s bold-600 pd-15">UTM Sources</div>
                   <div className="list">
                      {WebsiteAnalyticsCalculator.utmSourceStats(visitorsData).map((utmSourceStat, index) => {
@@ -258,7 +302,7 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
             <Spacing size={1} />
             
             <div className="horizontal-convertible gap-10">
-               <Card padding="0 15px">
+               <Card padding="10px 20px">
                   <div className="text-s bold-600 pd-15 dfb align-center gap-7">
                      Recommendations <div className="text-xxs fit grey-4">(powered by AI)</div> <Sparkle size={18} fill="#6A0DAD" color="#6A0DAD" />
                   </div>
@@ -363,7 +407,7 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
             <div className="horizontal-convertible gap-10">
                <Card padding="20px 15px">
                   <div className="text-s bold-600">Website Settings</div>
-                  <div className="text-xxs">Manage your website analytics below. Your website has been connected to Visora since {websiteInfo.createdAt}</div>
+                  <div className="text-xxs">Manage your website analytics below. Your website has been connected to Visora since {formatMilliseconds(websiteInfo.createdAt)}</div>
                   <br />
                   <div className="text-xs bold-600">Delete</div>
                   <div className="text-xxs">Click below to deactivate your website on visora, <b>this action cannot be reversed</b></div>

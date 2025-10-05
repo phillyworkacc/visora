@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.0.0",
     "@types/nodemailer": "^6.4.17",
     "axios": "^1.9.0",
     "cheerio": "^1.0.0",
@@ -21,6 +22,7 @@
     "nodemailer": "^6.10.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "recharts": "^3.2.1",
     "sonner": "^2.0.3",
     "stripe": "^18.2.0"
   },

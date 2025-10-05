@@ -1,3 +1,5 @@
+declare module '*.css';
+
 type User = {
    email: string;
    userid: string;
