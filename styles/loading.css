@@ -1,0 +1,22 @@
+.loading-page-visora {
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 0;
+   margin: 0;
+   background-color: #f3e2ff;
+}
+
+.loading-page-visora > .logo {
+   width: 70px;
+   aspect-ratio: 1;
+}
+
+.loading-page-visora > .logo > img {
+   width: 100%;
+   aspect-ratio: 1;
+   object-fit: cover;
+   object-position: center;
+}

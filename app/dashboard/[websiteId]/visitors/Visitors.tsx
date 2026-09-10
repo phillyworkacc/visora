@@ -108,7 +108,7 @@ function VisitorJourney ({ visitor, goBackAction }: { visitor: CustomVisitor, go
          <div className="text-m bold-600 pd-1">Visitor Page History</div>
          <div className="text-s dfb column gap-10">
             {visitor.visitorInfo.pages.map((page, index) => (
-               <Card padding="20px">
+               <Card key={index} padding="20px">
                   <div className="text-sm bold-600 full">Page</div>
                   <Link className="text-xs visible-link mc" href={page.url} target="_blank" key={index}>{page.url}</Link>
                </Card>
@@ -120,7 +120,7 @@ function VisitorJourney ({ visitor, goBackAction }: { visitor: CustomVisitor, go
          <div className="text-m bold-600 pd-1">Visitor Sessions</div>
          <div className="text-s dfb column gap-10">
             {visitor.visitorInfo.sessions.map((session, index) => (
-               <Card padding="20px">
+               <Card key={index} padding="20px">
                   <div className="text-sm bold-600 full">Session #{index+1}</div>
                   <div className="text-xxs">Session lasted for {formatTimeForAnalytics(session.sessionDuration)}</div>
                   <div className="text-xxs">Started session on {formatMilliseconds(session.timestamp)}</div>
