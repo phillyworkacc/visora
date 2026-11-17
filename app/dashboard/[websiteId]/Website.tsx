@@ -119,6 +119,16 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
    if (status == "loading" || visitorsData == null) {
       return <LoadingWebsiteAnalytics />;
    }
+
+   const pageInfo = {
+      "url": "https://www.grxnd.app/?fbclid=PAZXh0bgNhZW0CMTEAAafLDJax9vTMuuYlhQotp0q7SAsQHHwHMMN_RhyFfBco3bQzMvusTKPeklHBRA_aem_MRih3NKXIA5ROyBEweGkZA",
+      "referrer": "https://l.instagram.com/",
+      "entryPage": true,
+      "visits": 1,
+      "_id": "69012723578cc5c4b886efe5"
+   }
+
+   console.log(new URL(pageInfo.referrer).hostname)
    
    return (
       <div className="dashboard">
@@ -275,10 +285,8 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
                <Card padding="10px 20px">
                   <div className="text-s bold-600 pd-15">Page Views</div>
                   <div className="list">
-                     {WebsiteAnalyticsCalculator.pageStats(visitorsData).map((pageStat, index) => {
-                        return <ProgressBar key={index} size={parseFloat(pageStat.percent)}>
-                           {pageStat.page.split(websiteInfo.domain)[1]}
-                        </ProgressBar>
+                     {WebsiteAnalyticsCalculator.pageStats(visitorsData).sort((a,b) => parseFloat(b.percent) - parseFloat(a.percent)).map((pageStat, index) => {
+                        return <ProgressBar key={index} size={parseFloat(pageStat.percent)}>{pageStat.page}</ProgressBar>
                      })}
                   </div>
                   <br />
@@ -289,10 +297,22 @@ export default function WebsiteAnalytics ({ websiteInfo, websiteVisitorsData }: 
                <Card padding="10px 20px">
                   <div className="text-s bold-600 pd-15">UTM Sources</div>
                   <div className="list">
-                     {WebsiteAnalyticsCalculator.utmSourceStats(visitorsData).map((utmSourceStat, index) => {
+                     {WebsiteAnalyticsCalculator.utmSourceStats(visitorsData).sort((a,b) => parseFloat(b.percent) - parseFloat(a.percent)).map((utmSourceStat, index) => {
                         return <ProgressBar key={index} size={parseFloat(utmSourceStat.percent)}>
                            {utmSourceStat.utmSource}
                         </ProgressBar>
+                     })}
+                  </div>
+                  <br />
+               </Card>
+            </div>
+            
+            <div className="horizontal-convertible gap-10">
+               <Card padding="10px 20px">
+                  <div className="text-s bold-600 pd-15">Referral URLs</div>
+                  <div className="list">
+                     {WebsiteAnalyticsCalculator.referralStats(visitorsData).sort((a,b) => parseFloat(b.percent) - parseFloat(a.percent)).map((referralStat, index) => {
+                        return <ProgressBar key={index} size={parseFloat(referralStat.percent)}>{referralStat.referral}</ProgressBar>
                      })}
                   </div>
                   <br />

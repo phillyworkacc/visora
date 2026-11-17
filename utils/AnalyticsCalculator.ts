@@ -149,12 +149,47 @@ export const WebsiteAnalyticsCalculator = {
       })
    },
 
+   referralStats: (visitorsData: VisitorData[]) => {
+      const individualReferrals: string[] = []
+
+      for (const visitor of visitorsData) {
+         visitor.pages.forEach((page) => {
+            const hostname = page.referrer ? (new URL(page.referrer)).hostname : 'None';
+            if (!individualReferrals.includes(hostname)) individualReferrals.push(hostname);
+         })
+      }
+
+      const indReferralsTotalRef = Array.from({ length: individualReferrals.length }, (_, m) => 0);
+      // loop through each visitor
+      for (const visitor of visitorsData) {
+         // loop through each page the visitor has visited and
+         // add the number of times they've visited each page to the indPagesTotalVisits array
+         for (const page of visitor.pages) {
+            const hostname = page.referrer ? (new URL(page.referrer)).hostname : 'None';
+            const index = individualReferrals.indexOf(hostname);
+            indReferralsTotalRef[index] += page.visits;
+         }
+      }
+
+      const fullTotal = indReferralsTotalRef.reduce((sum, num) => sum + num, 0);
+
+      return individualReferrals.map((referral, index) => {
+         return {
+            referral: referral,
+            // visits: indPagesTotalVisits[index],
+            percent: ((indReferralsTotalRef[index] / fullTotal) * 100).toFixed(2)
+         }
+      })
+
+   },
+
    pageStats: (visitorsData: VisitorData[]) => {
       const individualPages: string[] = []
 
       for (const visitor of visitorsData) {
          visitor.pages.forEach((page) => {
-            if (!individualPages.includes(page.url)) individualPages.push(page.url);
+            const pathName = (new URL(page.url)).pathname.startsWith("/subject") ? '/subject' : (new URL(page.url)).pathname;
+            if (!individualPages.includes(pathName)) individualPages.push(pathName);
          })
       }
 
@@ -164,7 +199,8 @@ export const WebsiteAnalyticsCalculator = {
          // loop through each page the visitor has visited and
          // add the number of times they've visited each page to the indPagesTotalVisits array
          for (const page of visitor.pages) {
-            const index = individualPages.indexOf(page.url);
+            const pathName = (new URL(page.url)).pathname.startsWith("/subject") ? '/subject' : (new URL(page.url)).pathname;
+            const index = individualPages.indexOf(pathName);
             indPagesTotalVisits[index] += page.visits;
          }
       }
@@ -175,7 +211,7 @@ export const WebsiteAnalyticsCalculator = {
          return {
             page: page,
             // visits: indPagesTotalVisits[index],
-            percent: ((indPagesTotalVisits[index] / fullTotal) * 100).toFixed(1)
+            percent: ((indPagesTotalVisits[index] / fullTotal) * 100).toFixed(2)
          }
       })
    }
